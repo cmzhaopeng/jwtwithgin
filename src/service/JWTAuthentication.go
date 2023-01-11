@@ -2,12 +2,13 @@ package service
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-type JWTServicer interface {
+type JWTService interface {
 	GenerateToken(email string, isUser bool) string
 	ValidateToken(token string) (*jwt.Token, error)
 }
@@ -18,12 +19,28 @@ type authCustomClaims struct {
 	jwt.StandardClaims
 }
 
-type jwtService struct {
+type jwtServices struct {
 	secretKey string
 	issuer    string
 }
 
-func (service *jwtService) GenerateToken(email string, isUser bool) string {
+//auth-jwt
+func JWTAuthService() JWTService {
+	return &jwtServices{
+		secretKey: getSecretKey(),
+		issuer:    "Bikash",
+	}
+}
+
+func getSecretKey() string {
+	secret := os.Getenv("SECRET")
+	if secret == "" {
+		secret = "my_test_secret"
+	}
+	return secret
+}
+
+func (service *jwtServices) GenerateToken(email string, isUser bool) string {
 	claims := &authCustomClaims{
 		email,
 		isUser,
@@ -45,12 +62,11 @@ func (service *jwtService) GenerateToken(email string, isUser bool) string {
 	//return signedToken
 }
 
-func (service *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
+func (service *jwtServices) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	return jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
 		if _, isvalid := token.Method.(*jwt.SigningMethodHMAC); !isvalid {
 			return nil, fmt.Errorf("Invalid token", token.Header["alg"])
 		}
-
 		return []byte(service.secretKey), nil
 	})
 }
