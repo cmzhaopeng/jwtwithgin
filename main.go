@@ -5,20 +5,28 @@ import (
 	"jwtwithgin/src/controller"
 	"jwtwithgin/src/middleware"
 	"jwtwithgin/src/service"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	var loginsService service.LoginService = service.StaticLoginService()
 	var jwtService service.JWTService = service.JWTAuthService()
 	var loginController controller.LoginController = controller.LoginHandler(loginsService, jwtService)
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
+	key := os.Getenv("SESSION_KEY")
 	server := gin.New()
-	store := cookie.NewStore([]byte("secret-key-897"))
+	store := cookie.NewStore([]byte(key))
 	server.Use(sessions.Sessions("mysession", store))
 
 	server.POST("/login", func(ctx *gin.Context) {

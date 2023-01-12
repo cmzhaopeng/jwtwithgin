@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/joho/godotenv"
 )
 
 type JWTService interface {
@@ -24,7 +25,7 @@ type jwtServices struct {
 	issuer    string
 }
 
-//auth-jwt
+// auth-jwt
 func JWTAuthService() JWTService {
 	return &jwtServices{
 		secretKey: getSecretKey(),
@@ -33,10 +34,14 @@ func JWTAuthService() JWTService {
 }
 
 func getSecretKey() string {
-	secret := os.Getenv("SECRET")
-	if secret == "" {
-		secret = "my_test_secret"
+
+	err := godotenv.Load()
+	secret := "my_test_secret"
+	if err != nil {
+		fmt.Println("Error loading .env file")
+		return secret
 	}
+	secret = os.Getenv("SIGN_KEY")
 	return secret
 }
 
