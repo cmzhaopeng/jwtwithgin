@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"jwtwithgin/src/controller"
+	"jwtwithgin/src/middleware"
 	"jwtwithgin/src/service"
 	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +18,9 @@ func main() {
 	var loginController controller.LoginController = controller.LoginHandler(loginsService, jwtService)
 
 	server := gin.New()
+	store := cookie.NewStore([]byte("secret-key-897"))
+	server.Use(sessions.Sessions("mysession", store))
+
 	server.POST("/login", func(ctx *gin.Context) {
 		token := loginController.Login(ctx)
 		if token != "" {
@@ -25,23 +30,13 @@ func main() {
 		}
 	})
 
-	//server.Use(middleware.AuthorizeJWT())
+	server.Use(middleware.AuthorizeJWT())
 
 	server.GET("/home", func(ctx *gin.Context) {
-		fmt.Printf("home called")
-		const BEARER_SCHEMA = "Bearer"
-		authHeader := ctx.GetHeader("Authorization")
-		tokenString := authHeader[len(BEARER_SCHEMA):]
-		token, err := service.JWTAuthService().ValidateToken(tokenString)
-		if token.Valid {
-			claims := token.Claims.(jwt.MapClaims)
-			fmt.Println(claims)
-			//user := claims["user"].(string)
-			ctx.String(http.StatusOK, "Welcome %s", claims["name"])
-		} else {
-			fmt.Println(err)
-			ctx.AbortWithStatus(http.StatusUnauthorized)
-		}
+		session := sessions.Default(ctx)
+		fmt.Println(session.Get("name"))
+		//user := claims["user"].(string)
+		ctx.String(http.StatusOK, "Welcome %s", session.Get("name"))
 
 		//claims := ctx.MustGet("claims").(jwt.MapClaims)
 		//user := ctx.MustGet("Authorization").(string)

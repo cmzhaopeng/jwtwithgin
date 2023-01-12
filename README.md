@@ -5,3 +5,9 @@ reference:
 https://articles.wesionary.team/jwt-authentication-in-golang-with-gin-63dbc0816d55
 
 git push origin master
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdGluZ0AxMzkuY29tIiwidXNlciI6dHJ1ZSwiZXhwIjoxNjczNzQ4NzQ1LCJpYXQiOjE2NzM0ODk1NDUsImlzcyI6IkJpa2FzaCJ9.fiIkE5XE4e9_gc_b2_OSqzQs0D38brBjvt2qgMeZR5U"
+}
+
+BearereyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdGluZ0AxMzkuY29tIiwidXNlciI6dHJ1ZSwiZXhwIjoxNjczNzQ4NzQ1LCJpYXQiOjE2NzM0ODk1NDUsImlzcyI6IkJpa2FzaCJ9.fiIkE5XE4e9_gc_b2_OSqzQs0D38brBjvt2qgMeZR5U
