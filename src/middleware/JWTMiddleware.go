@@ -26,6 +26,7 @@ func AuthorizeJWT() gin.HandlerFunc {
 			fmt.Println(claims)
 		} else {
 			fmt.Println(err)
+			fmt.Print("Invalid token")
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 	}
