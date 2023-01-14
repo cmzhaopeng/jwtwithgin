@@ -40,11 +40,13 @@ func main() {
 
 	server.Use(middleware.AuthorizeJWT())
 
-	server.GET("/home", func(ctx *gin.Context) {
+	server.POST("/home", func(ctx *gin.Context) {
 		session := sessions.Default(ctx)
 		fmt.Println(session.Get("name"))
 		//user := claims["user"].(string)
-		ctx.String(http.StatusOK, "Welcome %s", session.Get("name"))
+		//ctx.String(http.StatusOK, "Welcome %s", session.Get("name"))
+		ctx.JSON(http.StatusOK, gin.H{"Gouser": session.Get("name")})
+		//ctx.JSON(http.StatusOK, gin.H{"Gouser": "name"})
 
 		//claims := ctx.MustGet("claims").(jwt.MapClaims)
 		//user := ctx.MustGet("Authorization").(string)
