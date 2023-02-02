@@ -28,7 +28,7 @@ func main() {
 	key := os.Getenv("SESSION_KEY")
 	server := gin.New()
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{"http://192.168.2.55", "http://localhost:3000"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	server.Use(cors.New(config))
