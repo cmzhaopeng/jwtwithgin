@@ -2,4 +2,5 @@
 # local env files
 .env*.local
 .env
+*.exe
 
