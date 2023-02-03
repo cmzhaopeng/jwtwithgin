@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
@@ -24,11 +25,16 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
+	//Getenv CORS_SITE, and split it with comma, and assign it to allowOrigins
+	corsSite := os.Getenv("CORS_SITE")
+	//filter the corsSite, and remove the space
+	corsSite = strings.ReplaceAll(corsSite, " ", "")
 	key := os.Getenv("SESSION_KEY")
 	server := gin.New()
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://192.168.2.55", "http://localhost:3000"}
+	config.AllowOrigins = strings.Split(corsSite, ",")
+	//config.AllowOrigins = []string{"http://192.168.2.55", "http://localhost:3000"}
+	fmt.Println(config.AllowOrigins)
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	server.Use(cors.New(config))
